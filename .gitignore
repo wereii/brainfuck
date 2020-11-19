@@ -4,4 +4,4 @@ bfcc
 *.out
 
 build/*
-
+docs/*
