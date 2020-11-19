@@ -96,6 +96,12 @@ int my_getopt(int argc, char **argv, int *stack_size, int *array_size, char **ou
 		} else if (!strcmp(argv[i], "-o")) {
 			if (i + 1 < argc) {
 				*output_file = argv[++i];
+				if (validate_fname(*output_file) == NULL) {
+					fprintf(stderr,
+							"%s: string '%s' contains invalid characters.\n",
+							*argv, *output_file);
+					return -1;
+				}
 				*mode &= ~(PIPE_OUT);
 			} else {
 				fprintf(stderr, "%s: option requires an argument -- 'o'\n", *argv);
@@ -112,6 +118,12 @@ int my_getopt(int argc, char **argv, int *stack_size, int *array_size, char **ou
 			*mode |= PIPE_IN;
 		} else {
 			*input_file = argv[i];
+			if (validate_fname(*input_file) == NULL) {
+				fprintf(stderr,
+						"%s: string '%s' contains invalid characters.\n",
+						*argv, *input_file);
+				return -1;
+			}
 			*mode &= ~(PIPE_IN);
 		}
 	}
@@ -300,7 +312,7 @@ int assemble(int mode, const char *as_file, const char *obj_file)
 	if (!(mode & ASSEMBLE) || mode & PIPE_OUT)
 		return 0;
 	char buf[256];
-	snprintf(buf, 256, "as %s -g -o %s", as_file, obj_file);
+	snprintf(buf, 256, "as '%s' -g -o '%s'", as_file, obj_file);
 	int ret = system(buf);
 	if (ret == 0 && !(mode & LINK)) {
 		ret = remove(as_file);
@@ -335,4 +347,20 @@ int get_in(int mode, const char *input_file, FILE **in)
 		return -1;
 	}
 	return 0;
+}
+
+/**
+ * @brief Checks occurrence of INVALID_CHARS symbols in str
+ *
+ * @param str Pointer to cstring to be checked
+ * @return Same pointer passed as str, NULL if any of the
+ * characters is found.
+ */
+const char *validate_fname(const char *str) {
+	char invalid[] = INVALID_FNAME_CHARS;
+	for (unsigned i = 0; i < strlen(invalid); i++) {
+		if (strchr(str, invalid[i]) != NULL)
+			return NULL;
+	}
+	return str;
 }

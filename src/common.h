@@ -21,11 +21,18 @@
 #define PIPE_IN (1 << 4)
 #define VERBOSE (1 << 5)
 
+/**
+ * @brief Characters considered invalid in file names and paths
+ */
+#define INVALID_FNAME_CHARS "\"';#\\"
+
+
 int is_uint(const char *str);
 void print_help(void);
 int my_getopt(int argc, char **argv, int *stack_size, int *array_size, char **output_file, char **input_file, int *mode);
 int compile(FILE *in, FILE *out, int stack_size, int array_size);
 char *remove_extenstion(const char *str);
+const char *validate_fname(const char *str);
 char *get_as(int mode, const char *name, const char *original, char **ret);
 char *get_obj(int mode, const char *name, const char *original, char **ret);
 int get_as_file(int mode, FILE **out, const char *name, const char *input_name);

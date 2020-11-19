@@ -61,9 +61,9 @@ int main(int argc, char **argv)
 	}
 	char buf[256];
 	if (output_file == NULL)
-		snprintf(buf, 256, "ld %s", obj_file);
+		snprintf(buf, 256, "ld '%s'", obj_file);
 	else
-		snprintf(buf, 256, "ld %s -o %s", obj_file, output_file);
+		snprintf(buf, 256, "ld '%s' -o '%s'", obj_file, output_file);
 	ret = system(buf);
 	if (ret == 0)
 		ret = remove(obj_file);
