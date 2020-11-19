@@ -1,0 +1,7 @@
+# Compiler
+*.o
+bfcc
+*.out
+
+build/*
+
