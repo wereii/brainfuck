@@ -20,17 +20,16 @@
  * @param str The string to check
  * @return if the string is a positive integer or not
  */
-int is_uint(const char *str)
-{
-	if (!*str) {
-		return 0;
-	}
-	for (;*str; str++) {
-		if (!isdigit(*str)) {
-			return 0;
-		}
-	}
-	return 1;
+int is_uint(const char *str) {
+    if (!*str) {
+        return 0;
+    }
+    for (; *str; str++) {
+        if (!isdigit(*str)) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 /**
@@ -38,20 +37,21 @@ int is_uint(const char *str)
  * when "-h" or "--help" are command
  * line arguments
  */
-void print_help(void)
-{
-	fputs("Usage: bfc [input file] [options]\n", stderr);
-	fputs("\n", stderr);
-	fputs("\t-s [NUMBER]     sets the stack size to this number\n", stderr);
-	fputs("\t-a [ARRSIZE]    sets the array size in the program to this number\n", stderr);
-	fputs("\t-c              only compile and assemble\n", stderr);
-	fputs("\t-S              only compile\n", stderr);
-	fputs("\t-o [FILE]       specify an output file\n", stderr);
-	fputs("\t-v              enable verbose output\n", stderr);
-	fputs("\t-h, --help      print this help message\n", stderr);
-	fputs("\t-i              get input from stdin\n", stderr);
-	fputs("\t-pipe           pipe to assembler if -S is not set, otherwise print to stdout\n", stderr);
-	fputs("\n", stderr);
+void print_help(void) {
+    fputs("Usage: bfc [input file] [options]\n", stderr);
+    fputs("\n", stderr);
+    fputs("\t-s [NUMBER]     sets the stack size to this number\n", stderr);
+    fputs("\t-a [ARRSIZE]    sets the array size in the program to this number\n",
+          stderr);
+    fputs("\t-c              only compile and assemble\n", stderr);
+    fputs("\t-S              only compile\n", stderr);
+    fputs("\t-o [FILE]       specify an output file\n", stderr);
+    fputs("\t-v              enable verbose output\n", stderr);
+    fputs("\t-h, --help      print this help message\n", stderr);
+    fputs("\t-i              get input from stdin\n", stderr);
+    fputs("\t-pipe           pipe to assembler if -S is not set, otherwise print to stdout\n",
+          stderr);
+    fputs("\n", stderr);
 }
 
 /**
@@ -71,63 +71,68 @@ void print_help(void)
  * @param mode A pointer to the overall state of the program determined by the flags
  * @return mode, the state of the program
  */
-int my_getopt(int argc, char **argv, int *stack_size, int *array_size, char **output_file, char **input_file, int *mode)
-{
-	int i;
-	for (i = 1; i < argc; i++) {
-		if (!strcmp(argv[i], "-s")) {
-			if (i + 1 < argc && is_uint(argv[i + 1])) {
-				*stack_size = atoi(argv[++i]);
-			} else {
-				fprintf(stderr, "%s: option requires a numerical argument -- 's'\n", *argv);
-				return -1;
-			}
-		} else if (!strcmp(argv[i], "-a")) {
-			if (i + 1 < argc && is_uint(argv[i + 1])) {
-				*array_size = atoi(argv[++i]);
-			} else {
-				fprintf(stderr, "%s: option requires a numerical argument -- 'a'\n", *argv);
-				return -1;
-			}
-		} else if (!strcmp(argv[i], "-c")) {
-			*mode &= ~(LINK);
-		} else if (!strcmp(argv[i], "-S")) {
-			*mode &= ~(LINK | ASSEMBLE);
-		} else if (!strcmp(argv[i], "-o")) {
-			if (i + 1 < argc) {
-				*output_file = argv[++i];
-				if (validate_fname(*output_file) == NULL) {
-					fprintf(stderr,
-							"%s: string '%s' contains invalid characters.\n",
-							*argv, *output_file);
-					return -1;
-				}
-				*mode &= ~(PIPE_OUT);
-			} else {
-				fprintf(stderr, "%s: option requires an argument -- 'o'\n", *argv);
-				return -1;
-			}
-		} else if (!strcmp(argv[i], "-v")) {
-			*mode |= VERBOSE;
-		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-			print_help();
-			return -1;
-		} else if (!strcmp(argv[i], "-pipe")) {
-			*mode |= PIPE_OUT;
-		} else if (!strcmp(argv[i], "-i")) {
-			*mode |= PIPE_IN;
-		} else {
-			*input_file = argv[i];
-			if (validate_fname(*input_file) == NULL) {
-				fprintf(stderr,
-						"%s: string '%s' contains invalid characters.\n",
-						*argv, *input_file);
-				return -1;
-			}
-			*mode &= ~(PIPE_IN);
-		}
-	}
-	return *mode;
+int my_getopt(int argc, char **argv, int *stack_size, int *array_size,
+              char **output_file, char **input_file, int *mode) {
+    int i;
+    for (i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-s")) {
+            if (i + 1 < argc && is_uint(argv[i + 1])) {
+                *stack_size = atoi(argv[++i]);
+            } else {
+                fprintf(stderr,
+                        "%s: option requires a numerical argument -- 's'\n",
+                        *argv);
+                return -1;
+            }
+        } else if (!strcmp(argv[i], "-a")) {
+            if (i + 1 < argc && is_uint(argv[i + 1])) {
+                *array_size = atoi(argv[++i]);
+            } else {
+                fprintf(stderr,
+                        "%s: option requires a numerical argument -- 'a'\n",
+                        *argv);
+                return -1;
+            }
+        } else if (!strcmp(argv[i], "-c")) {
+            *mode &= ~(LINK);
+        } else if (!strcmp(argv[i], "-S")) {
+            *mode &= ~(LINK | ASSEMBLE);
+        } else if (!strcmp(argv[i], "-o")) {
+            if (i + 1 < argc) {
+                *output_file = argv[++i];
+                if (validate_fname(*output_file) == NULL) {
+                    fprintf(stderr,
+                            "%s: string '%s' contains invalid characters.\n",
+                            *argv, *output_file);
+                    return -1;
+                }
+                *mode &= ~(PIPE_OUT);
+            } else {
+                fprintf(stderr, "%s: option requires an argument -- 'o'\n",
+                        *argv);
+                return -1;
+            }
+        } else if (!strcmp(argv[i], "-v")) {
+            *mode |= VERBOSE;
+        } else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+            print_help();
+            return -1;
+        } else if (!strcmp(argv[i], "-pipe")) {
+            *mode |= PIPE_OUT;
+        } else if (!strcmp(argv[i], "-i")) {
+            *mode |= PIPE_IN;
+        } else {
+            *input_file = argv[i];
+            if (validate_fname(*input_file) == NULL) {
+                fprintf(stderr,
+                        "%s: string '%s' contains invalid characters.\n",
+                        *argv, *input_file);
+                return -1;
+            }
+            *mode &= ~(PIPE_IN);
+        }
+    }
+    return *mode;
 }
 
 /**
@@ -137,21 +142,20 @@ int my_getopt(int argc, char **argv, int *stack_size, int *array_size, char **ou
  * @param str The string to check the file extension of
  * @return The malloc'd string containing the filename without the extension
  */
-char *remove_extenstion(const char *str)
-{
-	int strl = strlen(str);
-	const char *s = str + strl - 1;
-	for (; *s; s--) {
-		if (*s == '/')
-			break;
-		if (*s == '.') {
-			char *newstr = malloc(1 + s - str);
-			memcpy(newstr, str, s - str);
-			newstr[s - str] = '\0';
-			return newstr;
-		}
-	}
-	return strdup(str);
+char *remove_extenstion(const char *str) {
+    int strl = strlen(str);
+    const char *s = str + strl - 1;
+    for (; *s; s--) {
+        if (*s == '/')
+            break;
+        if (*s == '.') {
+            char *newstr = malloc(1 + s - str);
+            memcpy(newstr, str, s - str);
+            newstr[s - str] = '\0';
+            return newstr;
+        }
+    }
+    return strdup(str);
 }
 
 /**
@@ -165,26 +169,25 @@ char *remove_extenstion(const char *str)
  * @return the malloc'd name of the assembly code file, or NULL
  * if the compiler is piping out the assembly code
  */
-char *get_as(int mode, const char *name, const char *original, char **ret)
-{
-	if (name != NULL && ~(mode & ASSEMBLE))
-		*ret = strdup(name);
-	else if (mode & PIPE_OUT)
-		*ret = NULL;
-	else if (original != NULL) {
-		char *base = remove_extenstion(original);
-		int strl = strlen(base);
-		char *new_base = realloc(base, strl + 3);
-		if (new_base == NULL) {
-			fprintf(stderr, "error: couldn't realloc string: ");
-			perror(NULL);
-			return (*ret = NULL);
-		}
-		base = new_base;
-		*ret = strncat(base, ".s", strl + 3);
-	} else
-		*ret = strdup("a.out.s");
-	return *ret;
+char *get_as(int mode, const char *name, const char *original, char **ret) {
+    if (name != NULL && ~(mode & ASSEMBLE))
+        *ret = strdup(name);
+    else if (mode & PIPE_OUT)
+        *ret = NULL;
+    else if (original != NULL) {
+        char *base = remove_extenstion(original);
+        int strl = strlen(base);
+        char *new_base = realloc(base, strl + 3);
+        if (new_base == NULL) {
+            fprintf(stderr, "error: couldn't realloc string: ");
+            perror(NULL);
+            return (*ret = NULL);
+        }
+        base = new_base;
+        *ret = strncat(base, ".s", strl + 3);
+    } else
+        *ret = strdup("a.out.s");
+    return *ret;
 }
 
 /**
@@ -196,30 +199,29 @@ char *get_as(int mode, const char *name, const char *original, char **ret)
  * @param ret A pointer to the malloc'd name of the assembled file if no errors occur
  * @ret The malloc'd name of the assembled file if no errors occur
  */
-char *get_obj(int mode, const char *name, const char *original, char **ret)
-{
-	if (name != NULL && ~(mode & LINK)) {
-		unsigned strl = strlen(name);
+char *get_obj(int mode, const char *name, const char *original, char **ret) {
+    if (name != NULL && ~(mode & LINK)) {
+        unsigned strl = strlen(name);
         *ret = malloc(strl + 3);
         if (*ret == NULL) {
             puts("error: couldn't alloc string");
             return NULL;
         }
         snprintf(*ret, strl + 3, "%s.o", name);
-	} else if (original != NULL) {
-		char *base = remove_extenstion(original);
-		int strl = strlen(base);
-		char *new_base = realloc(base, strl + 3);
-		if (new_base == NULL) {
-			puts("error: couldn't realloc string");
-			return NULL;
-		}
-		base = new_base;
-		*ret = strncat(base, ".o", strl + 3);
-	} else {
-		*ret = strdup("a.out.o");
-	}
-	return *ret;
+    } else if (original != NULL) {
+        char *base = remove_extenstion(original);
+        int strl = strlen(base);
+        char *new_base = realloc(base, strl + 3);
+        if (new_base == NULL) {
+            puts("error: couldn't realloc string");
+            return NULL;
+        }
+        base = new_base;
+        *ret = strncat(base, ".o", strl + 3);
+    } else {
+        *ret = strdup("a.out.o");
+    }
+    return *ret;
 }
 
 /**
@@ -235,43 +237,43 @@ char *get_obj(int mode, const char *name, const char *original, char **ret)
  * @param input_name The name of the original file that is being compiled
  * @return 0 on success, -1 on failure
  */
-int get_as_file(int mode, FILE **out, const char *name, const char *input_name)
-{
-	if (name != NULL && ~(mode & ASSEMBLE)) {
-		*out = fopen(name, "w");
-		if (*out == NULL) {
-			fprintf(stderr, "error: couldn't open file %s: ", name);
-			perror(NULL);
-			return -1;
-		}
-	} else if ((mode & PIPE_OUT) && (mode & ASSEMBLE)) {
-		char buf[100];
-		char *foo = NULL;
-		if (get_obj(mode, name, input_name, &foo) == NULL)
-			return -1;
-		snprintf(buf, 100, "as -g -o %s", foo);
-		free(foo);
-		*out = popen(buf, "w");
-		if (*out == NULL) {
-			fprintf(stderr, "error: couldn't open process %s: ", buf);
-			perror(NULL);
-			return -1;
-		}
-	} else if (mode & PIPE_OUT) {
-		*out = stdout;
-	} else {
-		char *foo = NULL;
-		if (get_as(mode, name, input_name, &foo) == NULL)
-			return -1;
-		*out = fopen(foo, "w");
-		if (*out == NULL) {
-			fprintf(stderr, "error: couldn't open file %s: ", foo);
-			perror(NULL);
-			return -1;
-		}
-		free(foo);
-	}
-	return 0;
+int
+get_as_file(int mode, FILE **out, const char *name, const char *input_name) {
+    if (name != NULL && ~(mode & ASSEMBLE)) {
+        *out = fopen(name, "w");
+        if (*out == NULL) {
+            fprintf(stderr, "error: couldn't open file %s: ", name);
+            perror(NULL);
+            return -1;
+        }
+    } else if ((mode & PIPE_OUT) && (mode & ASSEMBLE)) {
+        char buf[100];
+        char *foo = NULL;
+        if (get_obj(mode, name, input_name, &foo) == NULL)
+            return -1;
+        snprintf(buf, 100, "as -g -o %s", foo);
+        free(foo);
+        *out = popen(buf, "w");
+        if (*out == NULL) {
+            fprintf(stderr, "error: couldn't open process %s: ", buf);
+            perror(NULL);
+            return -1;
+        }
+    } else if (mode & PIPE_OUT) {
+        *out = stdout;
+    } else {
+        char *foo = NULL;
+        if (get_as(mode, name, input_name, &foo) == NULL)
+            return -1;
+        *out = fopen(foo, "w");
+        if (*out == NULL) {
+            fprintf(stderr, "error: couldn't open file %s: ", foo);
+            perror(NULL);
+            return -1;
+        }
+        free(foo);
+    }
+    return 0;
 }
 
 /**
@@ -285,15 +287,14 @@ int get_as_file(int mode, FILE **out, const char *name, const char *input_name)
  * @param f The file pointer to close
  * @return if the file pointer was successfully closed
  */
-int close_as_file(int mode, FILE *f)
-{
-	int ret = 0;
-	if ((mode & PIPE_OUT) && (mode & ASSEMBLE))
-		ret = pclose(f);
-	else if (f != stdout)
-		ret = fclose(f);
-	f = NULL;
-	return ret;
+int close_as_file(int mode, FILE *f) {
+    int ret = 0;
+    if ((mode & PIPE_OUT) && (mode & ASSEMBLE))
+        ret = pclose(f);
+    else if (f != stdout)
+        ret = fclose(f);
+    f = NULL;
+    return ret;
 }
 
 /**
@@ -307,17 +308,16 @@ int close_as_file(int mode, FILE *f)
  * @param obj_file The name of the object code file that will be generated
  * @return the success of the assembler process
  */
-int assemble(int mode, const char *as_file, const char *obj_file)
-{
-	if (!(mode & ASSEMBLE) || mode & PIPE_OUT)
-		return 0;
-	char buf[256];
-	snprintf(buf, 256, "as '%s' -g -o '%s'", as_file, obj_file);
-	int ret = system(buf);
-	if (ret == 0 && !(mode & LINK)) {
-		ret = remove(as_file);
-	}
-	return ret;
+int assemble(int mode, const char *as_file, const char *obj_file) {
+    if (!(mode & ASSEMBLE) || mode & PIPE_OUT)
+        return 0;
+    char buf[256];
+    snprintf(buf, 256, "as '%s' -g -o '%s'", as_file, obj_file);
+    int ret = system(buf);
+    if (ret == 0 && !(mode & LINK)) {
+        ret = remove(as_file);
+    }
+    return ret;
 }
 
 /**
@@ -328,25 +328,25 @@ int assemble(int mode, const char *as_file, const char *obj_file)
  * @param input_file The file specified by the command line args
  * @param in The pointer to the file pointer to set
  */
-int get_in(int mode, const char *input_file, FILE **in)
-{
-	if (input_file == NULL && !(mode & PIPE_IN)) {
-		fprintf(stderr, "bfc: error: no input files\ncompilation terminated.\n");
-		return -1;
-	}
-	if (mode & PIPE_IN)
-		*in = stdin;
-	else {
-		*in = fopen(input_file, "r");
-		if (mode & VERBOSE)
-			printf("opening file %s\n", input_file);
-	}
-	if (*in == NULL) {
-		fprintf(stderr, "error: couldn't open file %s: ", input_file);
-		perror(NULL);
-		return -1;
-	}
-	return 0;
+int get_in(int mode, const char *input_file, FILE **in) {
+    if (input_file == NULL && !(mode & PIPE_IN)) {
+        fprintf(stderr,
+                "bfc: error: no input files\ncompilation terminated.\n");
+        return -1;
+    }
+    if (mode & PIPE_IN)
+        *in = stdin;
+    else {
+        *in = fopen(input_file, "r");
+        if (mode & VERBOSE)
+            printf("opening file %s\n", input_file);
+    }
+    if (*in == NULL) {
+        fprintf(stderr, "error: couldn't open file %s: ", input_file);
+        perror(NULL);
+        return -1;
+    }
+    return 0;
 }
 
 /**
@@ -357,10 +357,10 @@ int get_in(int mode, const char *input_file, FILE **in)
  * characters is found.
  */
 const char *validate_fname(const char *str) {
-	char invalid[] = INVALID_FNAME_CHARS;
-	for (unsigned i = 0; i < strlen(invalid); i++) {
-		if (strchr(str, invalid[i]) != NULL)
-			return NULL;
-	}
-	return str;
+    char invalid[] = INVALID_FNAME_CHARS;
+    for (unsigned i = 0; i < strlen(invalid); i++) {
+        if (strchr(str, invalid[i]) != NULL)
+            return NULL;
+    }
+    return str;
 }

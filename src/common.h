@@ -28,15 +28,28 @@
 
 
 int is_uint(const char *str);
+
 void print_help(void);
-int my_getopt(int argc, char **argv, int *stack_size, int *array_size, char **output_file, char **input_file, int *mode);
+
+int my_getopt(int argc, char **argv, int *stack_size, int *array_size,
+              char **output_file, char **input_file, int *mode);
+
 int compile(FILE *in, FILE *out, int stack_size, int array_size);
+
 char *remove_extenstion(const char *str);
+
 const char *validate_fname(const char *str);
+
 char *get_as(int mode, const char *name, const char *original, char **ret);
+
 char *get_obj(int mode, const char *name, const char *original, char **ret);
+
 int get_as_file(int mode, FILE **out, const char *name, const char *input_name);
+
 int close_as_file(int mode, FILE *f);
+
 int assemble(int mode, const char *as_file, const char *obj_file);
+
 int get_in(int mode, const char *input_file, FILE **in);
+
 #endif
