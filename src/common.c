@@ -187,7 +187,13 @@ char *get_as(int mode, const char *name, const char *original, char **ret)
 char *get_obj(int mode, const char *name, const char *original, char **ret)
 {
 	if (name != NULL && ~(mode & LINK)) {
-		*ret = strdup(name);
+		unsigned strl = strlen(name);
+        *ret = malloc(strl + 3);
+        if (*ret == NULL) {
+            puts("error: couldn't alloc string");
+            return NULL;
+        }
+        snprintf(*ret, strl + 3, "%s.o", name);
 	} else if (original != NULL) {
 		char *base = remove_extenstion(original);
 		int strl = strlen(base);
