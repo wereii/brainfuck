@@ -28,9 +28,9 @@ add_executable(bfcc src/main.c src/common.c src/compiler.c)
 
 install(TARGETS bfcc DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
-option(TESTS "Generate tests" OFF)
+option(TESTS "Generate tests" ON)
 if (TESTS MATCHES ON)
-    MESSAGE(STATUS "Tests enabled")
     enable_testing()
     add_subdirectory(tests)
+    MESSAGE(STATUS "Tests enabled")
 endif ()

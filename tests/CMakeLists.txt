@@ -34,5 +34,5 @@ endfunction()
 add_compile_run_test(hello_world hello_world.bf)
 set_tests_properties(hello_world PROPERTIES PASS_REGULAR_EXPRESSION "^Hello World!\n?$")
 
-# add_compile_run_test(comment comment.bf)
-# set_tests_properties(comment PROPERTIES PASS_REGULAR_EXPRESSION "^A\n?$")
+add_compile_run_test(comment comment.bf)
+set_tests_properties(comment PROPERTIES PASS_REGULAR_EXPRESSION "^A\n?$")
